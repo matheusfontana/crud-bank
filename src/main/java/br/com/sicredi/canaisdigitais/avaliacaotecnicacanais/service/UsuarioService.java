@@ -1,17 +1,20 @@
-package br.com.sicredi.canaisdigitais.avaliacaotecnicacanais;
+package br.com.sicredi.canaisdigitais.avaliacaotecnicacanais.service;
 
+import br.com.sicredi.canaisdigitais.avaliacaotecnicacanais.dto.EnderecoDTO;
+import br.com.sicredi.canaisdigitais.avaliacaotecnicacanais.dto.UsuarioDTO;
+import br.com.sicredi.canaisdigitais.avaliacaotecnicacanais.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
@@ -53,6 +56,13 @@ public class UsuarioService {
 
     private EnderecoDTO converterEndereco(String endereco) {
         try {
+            //deve ser true apos /arquivos?idUsuario=3
+            log.info("FAIL_ON_UNKNOWN_PROPERTIES value pre re-setting: {}",
+                    objectMapper.getDeserializationConfig().hasDeserializationFeatures(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES.getMask()));
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); //FIX OPCAO 1
+            //false depois da configuracao acima
+            log.info("FAIL_ON_UNKNOWN_PROPERTIES value post re-setting: {}",
+                    objectMapper.getDeserializationConfig().hasDeserializationFeatures(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES.getMask()));
             return objectMapper.readValue(endereco, EnderecoDTO.class);
         } catch (Exception e) {
             throw new RuntimeException(e);

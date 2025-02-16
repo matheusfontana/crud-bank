@@ -1,4 +1,4 @@
-package br.com.sicredi.canaisdigitais.avaliacaotecnicacanais;
+package br.com.sicredi.canaisdigitais.avaliacaotecnicacanais.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
